@@ -1,0 +1,15 @@
+{
+  "name": "hono-boilerplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "zod-decorator": "pnpm --filter @packages/zod-decorator",
+    "zod-demo": "pnpm --filter @apps/zod-demo",
+    "start:dev": "pnpm i && pnpm packages:build && pnpm run zod-demo dev",
+    "packages:build": "pnpm run zod-decorator build "
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
