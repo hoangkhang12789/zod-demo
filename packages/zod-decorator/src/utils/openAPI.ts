@@ -8,7 +8,7 @@ type SourceType = 'json' | 'query';
 export function openAPI(data: {
     operationId: string,
     tag: string,
-    request: ZodType,
+    request?: ZodType,
     response: ZodType,
     header: ZodType,
     dataSource: SourceType
@@ -26,30 +26,32 @@ export function openAPI(data: {
         tags: [data.tag],
         parameters: [...headerParams]
     };
+    if (data.request) {
+        if (data.dataSource === 'json') {
+            const { schema: requestSchema } = createSchema(data.request, schemaOptions);
 
-    if (data.dataSource === 'json') {
-        const { schema: requestSchema } = createSchema(data.request, schemaOptions);
+            options = {
+                ...options,
+                requestBody: {
+                    content: {
+                        "application/json": {
+                            schema: requestSchema as any
 
-        options = {
-            ...options,
-            requestBody: {
-                content: {
-                    "application/json": {
-                        schema: requestSchema as any
-
+                        },
                     },
-                },
+                }
             }
+        }
+
+        if (data.dataSource === 'query') {
+            options.parameters = [
+                ...headerParams,
+                ...zodToOpenAPIQueryParams(data.request as any)
+            ];
+
         }
     }
 
-    if (data.dataSource === 'query') {
-        options.parameters = [
-            ...headerParams,
-            ...zodToOpenAPIQueryParams(data.request as any)
-        ];
-
-    }
     return describeRoute({
         operationId: data.operationId,
         ...options,
