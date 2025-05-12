@@ -5,7 +5,7 @@ import { ProductTypeEnum } from '../enums';
 export const AddUserStatusDto = z.object({
   content: z.string().trim().max(50).optional(),
   status: z.string().emoji().optional(),
-  expireAfterTime: z.nativeEnum(ProductTypeEnum).openapi({ ref: "ProductTypeEnum" })
+  expireAfterTime: z.nativeEnum(ProductTypeEnum).openapi({ ref: "ProductTypeEnum", effectType: 'same' })
 })
   .refine(
     data => data.content !== undefined || data.status !== undefined,
@@ -18,12 +18,14 @@ export const AddUserStatusDto = z.object({
     anyOf: [
       {
         required: [
-          "content"
+          "content",
+          "expireAfterTime",
         ]
       },
       {
         required: [
-          "status"
+          "status",
+          "expireAfterTime",
         ]
       }
     ]

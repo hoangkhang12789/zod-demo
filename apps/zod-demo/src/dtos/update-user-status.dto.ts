@@ -11,7 +11,7 @@ export const UpdateUserStatusDto = z.object({
     }
   )
   .openapi({
-    ref: "AddUserStatusDto",
+    ref: "UpdateUserStatusDto",
     anyOf: [
       {
         required: [
