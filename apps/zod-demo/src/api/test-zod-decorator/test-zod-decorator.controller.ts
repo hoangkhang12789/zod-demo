@@ -1,5 +1,5 @@
 import { UserMetadataDto } from './../../dtos/user-metadata.dto';
-import { CreateProductDto, GetProductDto } from '../../dtos';
+import { AddUserStatusDto, CreateProductDto, GetProductDto } from '../../dtos';
 import { Context, Hono } from 'hono';
 import { openAPI, zodValidator } from '@packages/zod-decorator'
 import { CreateProductResponse, GetProductResponse } from '../../response';
@@ -23,6 +23,7 @@ TestController.post(
         return c.json(data, 200);
     },
 );
+
 TestController.get(
     'get',
     openAPI({
@@ -35,6 +36,23 @@ TestController.get(
     }),
     zodValidator(UserMetadataDto, "header", 'data'),
     zodValidator(GetProductDto, "query", 'data'),
+    async (c: Context) => {
+        const data = await c.get("data");
+        return c.json(data, 200);
+    },
+);
+TestController.post(
+    'add',
+    openAPI({
+        operationId: "add",
+        tag: "test",
+        request: AddUserStatusDto,
+        response: CreateProductResponse,
+        header: UserMetadataDto,
+        dataSource: 'json'
+    }),
+    zodValidator(UserMetadataDto, "header", 'data'),
+    zodValidator(AddUserStatusDto, "json", 'data'),
     async (c: Context) => {
         const data = await c.get("data");
         return c.json(data, 200);

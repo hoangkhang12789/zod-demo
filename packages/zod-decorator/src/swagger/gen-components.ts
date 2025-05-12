@@ -12,27 +12,33 @@ export function genSchemaComponents(schemas: Record<string, any>): object {
         if (!isZodType(itemSchema)) {
             continue;
         }
-        const shape = itemSchema._def.shape();
+        let baseSchema = itemSchema;
+        if (baseSchema._def.typeName === 'ZodEffects') {
+            baseSchema = baseSchema._def.schema;
+        }
 
-        // Iterate through each field in the shape
-        for (const [fieldName, fieldSchema] of Object.entries(shape)) {
-            if ((fieldSchema as any)._def.typeName === 'ZodEffects' && (fieldSchema as any)._def.schema) {
-                const schema = (fieldSchema as any)._def.schema
-                if (schema._def.innerType && schema._def.innerType._def?.typeName === 'ZodNativeEnum') {
-                    const ref = (fieldSchema as any)._def.zodOpenApi.openapi.ref;
-                    const value = Object.fromEntries(
-                        Object.entries(schema._def.innerType._def.values).filter(([key, val]) => isNaN(Number(key)) && typeof val === 'number')
-                    );
-                    const enumComponents = generateNativeEnumComponents(ref, value)
-                    if (enumComponents) {
-                        Schemas = {
-                            ...Schemas,
-                            ...enumComponents
-                        };
+        if (baseSchema._def.typeName === 'ZodObject' && typeof baseSchema._def.shape === 'function') {
+            const shape = baseSchema._def.shape();
+
+            for (const [fieldName, fieldSchema] of Object.entries(shape)) {
+                if ((fieldSchema as any)._def.typeName === 'ZodEffects' && (fieldSchema as any)._def.schema) {
+                    const schema = (fieldSchema as any)._def.schema;
+                    if (schema._def.innerType && schema._def.innerType._def?.typeName === 'ZodNativeEnum') {
+                        const ref = (fieldSchema as any)._def.zodOpenApi?.openapi?.ref;
+                        if (ref) {
+                            const value = Object.fromEntries(
+                                Object.entries(schema._def.innerType._def.values).filter(([key, val]) => isNaN(Number(key)) && typeof val === 'number')
+                            );
+                            const enumComponents = generateNativeEnumComponents(ref, value);
+                            if (enumComponents) {
+                                Schemas = {
+                                    ...Schemas,
+                                    ...enumComponents
+                                };
+                            }
+                        }
                     }
                 }
-
-
             }
         }
 
