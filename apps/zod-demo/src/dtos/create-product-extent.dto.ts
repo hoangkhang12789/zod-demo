@@ -20,5 +20,6 @@ export const CreateProductExtentDto = z.object({
         } catch (_) {
             return false;
         }
-    }).transform((value) => JSON.parse(value)).describe("productData").optional()
+    }).transform((value) => JSON.parse(value)).describe("productData").optional(),
+    id: z.union([z.literal(5), z.literal(10), z.literal(15)])
 }).openapi({ ref: 'CreateProductExtentDto' });

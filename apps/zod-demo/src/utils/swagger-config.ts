@@ -10,7 +10,6 @@ export function swaggerConfig(app: Hono, prefix: string) {
             description: "Zod Demo Swagger",
             version: "1.0.0",
         },
-        enumSchemas: { ...Enums },
         schemas: { ...Dtos, ...Response },
     });
 }

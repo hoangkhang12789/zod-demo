@@ -1,29 +1,6 @@
 import { createSchema, } from "zod-openapi";
 import { ZodType } from "zod";
 
-type SchemaComponent = {
-    enum?: unknown;
-    [key: string]: any;
-};
-
-export function genEnumComponents(enums: Record<string, any>): object {
-    let Schemas = {};
-
-    for (const [enumName, enumSchema] of Object.entries(enums)) {
-        if (isNativeEnum(enumSchema)) {
-            const enumComponents = generateNativeEnumComponents(`V3${enumName}`.replace('Dto', 'Request'), enumSchema);
-            if (enumComponents) {
-                Schemas = {
-                    ...Schemas,
-                    ...enumComponents
-                };
-            }
-        }
-    }
-
-    return Schemas;
-}
-
 export function genSchemaComponents(schemas: Record<string, any>): object {
     let Schemas = {};
 
@@ -35,14 +12,42 @@ export function genSchemaComponents(schemas: Record<string, any>): object {
         if (!isZodType(itemSchema)) {
             continue;
         }
+        const shape = itemSchema._def.shape();
 
-        const { components } = createSchema(itemSchema as ZodType, {
+        // Iterate through each field in the shape
+        for (const [fieldName, fieldSchema] of Object.entries(shape)) {
+            if ((fieldSchema as any)._def.typeName === 'ZodEffects' && (fieldSchema as any)._def.schema) {
+                const schema = (fieldSchema as any)._def.schema
+                if (schema._def.innerType && schema._def.innerType._def?.typeName === 'ZodNativeEnum') {
+                    const ref = (fieldSchema as any)._def.zodOpenApi.openapi.ref;
+                    const value = Object.fromEntries(
+                        Object.entries(schema._def.innerType._def.values).filter(([key, val]) => isNaN(Number(key)) && typeof val === 'number')
+                    );
+                    const enumComponents = generateNativeEnumComponents(ref, value)
+                    if (enumComponents) {
+                        Schemas = {
+                            ...Schemas,
+                            ...enumComponents
+                        };
+                    }
+                }
+
+
+            }
+        }
+
+        let { components } = createSchema(itemSchema as ZodType, {
             schemaType: 'input',
             openapi: '3.1.0',
         });
 
+        const filteredComponents = Object.fromEntries(
+            Object.entries(components as Record<string, any>).filter(
+                ([_, value]) => !('enum' in value)
+            )
+        );
         if (components) {
-            for (const [key, value] of Object.entries(components)) {
+            for (const [key, value] of Object.entries(filteredComponents)) {
                 Schemas[key] = {
                     ...(Schemas[key] || {}),
                     ...value
@@ -50,12 +55,8 @@ export function genSchemaComponents(schemas: Record<string, any>): object {
             }
         }
     }
-    const components = Object.fromEntries(
-        Object.entries(Schemas).filter(
-            ([, value]) => !(value as SchemaComponent).enum
-        )
-    );
-    return components;
+
+    return Schemas;
 }
 
 function isZodType(obj: any): boolean {

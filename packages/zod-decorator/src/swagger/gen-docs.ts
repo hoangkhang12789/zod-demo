@@ -1,5 +1,5 @@
 import { createDocument } from "zod-openapi";
-import { genEnumComponents, genSchemaComponents } from "./gen-components";
+import { genSchemaComponents } from "./gen-components";
 import { DocsSwagger } from "./interface";
 import { OpenAPIV3_1 } from 'openapi-types';
 
@@ -9,11 +9,10 @@ export function genDocs(docs: DocsSwagger) {
         info: docs.info
     }) as OpenAPIV3_1.Document;
 
-    const enumSchemasComponents = genEnumComponents(docs.enumSchemas);
     const schemasComponents = genSchemaComponents(docs.schemas);
     document.components = document.components || {};
     document.components.schemas = document.components.schemas || {};
-    Object.assign(document.components.schemas, enumSchemasComponents, schemasComponents);
+    Object.assign(document.components.schemas, schemasComponents);
 
     return document;
 }

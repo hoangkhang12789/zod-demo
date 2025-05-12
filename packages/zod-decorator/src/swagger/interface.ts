@@ -5,5 +5,4 @@ export interface DocsSwagger {
         description: string;
     };
     schemas: Record<string, any>;
-    enumSchemas: Record<string, any>;
 }
