@@ -7,7 +7,7 @@ import { swaggerConfig } from "./utils/swagger-config.js";
 
 const app = new Hono();
 
-swaggerConfig(app, "test")
+// swaggerConfig(app, "test")
 
 app.use("*", HonoLogger());
 app.route("test", TestZodDecoratorController);
