@@ -14,6 +14,10 @@ export const ReportDto = z.object({
         if (data.pretendingTo === 0) {
             return !!data.reportReason;
         }
+        if (data.pretendingTo !== 0) {
+
+            return data.reportReason === undefined;
+        }
     }, {
         message: "report Reason is required when pretendingTo is 0",
     })
