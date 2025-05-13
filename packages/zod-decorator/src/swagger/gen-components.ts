@@ -36,6 +36,8 @@ export function genSchemaComponents(schemas: Record<string, any>): object {
             openapi: '3.1.0',
         });
 
+        if (components === undefined) { continue }
+
         const filteredComponents = Object.fromEntries(
             Object.entries(components as Record<string, any>).filter(
                 ([_, value]) => !('enum' in value)
