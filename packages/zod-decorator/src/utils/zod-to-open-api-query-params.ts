@@ -29,6 +29,10 @@ function unwrapZodType(type: ZodTypeAny): { type: ZodTypeAny, isOptional: boolea
 }
 
 export function zodToOpenAPIQueryParams(zodSchema: ZodObject<any>): any[] {
+    if (zodSchema instanceof ZodEffects) {
+        zodSchema = (zodSchema as any)._def.schema;
+    }
+
     const shape = zodSchema.shape;
 
     return Object.entries(shape).map(([key, value]) => {

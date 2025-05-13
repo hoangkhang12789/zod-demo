@@ -31,11 +31,6 @@ export function genSchemaComponents(schemas: Record<string, any>): object {
             continue;
         }
 
-        // Schemas = {
-        //     ...Schemas,
-        //     ...genEnumSchema(itemSchema)
-        // };
-        
         const { components } = createSchema(itemSchema as ZodType, {
             schemaType: 'input',
             openapi: '3.1.0',
