@@ -8,14 +8,14 @@ const TestController = new Hono();
 
 TestController.post(
     'create',
-    // openAPI({
-    //     operationId: "create",
-    //     tag: "test",
-    //     request: CreateProductDto,
-    //     response: CreateProductResponse,
-    //     header: UserMetadataDto,
-    //     dataSource: 'json'
-    // }),
+    openAPI({
+        operationId: "create",
+        tag: "test",
+        request: CreateProductDto,
+        response: CreateProductResponse,
+        header: UserMetadataDto,
+        dataSource: 'json'
+    }),
     zodValidator(UserMetadataDto, "header", 'data'),
     zodValidator(CreateProductDto, "json", 'data'),
     async (c: Context) => {
@@ -26,14 +26,14 @@ TestController.post(
 
 TestController.get(
     'get',
-    // openAPI({
-    //     operationId: "get",
-    //     tag: "test",
-    //     request: GetProductDto,
-    //     response: GetProductResponse,
-    //     header: UserMetadataDto,
-    //     dataSource: 'query'
-    // }),
+    openAPI({
+        operationId: "get",
+        tag: "test",
+        request: GetProductDto,
+        response: GetProductResponse,
+        header: UserMetadataDto,
+        dataSource: 'query'
+    }),
     zodValidator(UserMetadataDto, "header", 'data'),
     zodValidator(GetProductDto, "query", 'data'),
     async (c: Context) => {
@@ -44,14 +44,14 @@ TestController.get(
 
 TestController.get(
     'list',
-    // openAPI({
-    //     operationId: "list",
-    //     tag: "test",
-    //     request: ListProductDto,
-    //     response: ListProductResponse,
-    //     header: UserMetadataDto,
-    //     dataSource: 'query'
-    // }),
+    openAPI({
+        operationId: "list",
+        tag: "test",
+        request: ListProductDto,
+        response: ListProductResponse,
+        header: UserMetadataDto,
+        dataSource: 'query'
+    }),
     zodValidator(UserMetadataDto, "header", 'header'),
     zodValidator(ListProductDto, "query", 'data'),
     async (c: Context) => {
@@ -63,14 +63,14 @@ TestController.get(
 
 TestController.post(
     'add',
-    // openAPI({
-    //     operationId: "add",
-    //     tag: "test",
-    //     request: AddUserStatusDto,
-    //     response: CreateProductResponse,
-    //     header: UserMetadataDto,
-    //     dataSource: 'json'
-    // }),
+    openAPI({
+        operationId: "add",
+        tag: "test",
+        request: AddUserStatusDto,
+        response: CreateProductResponse,
+        header: UserMetadataDto,
+        dataSource: 'json'
+    }),
     zodValidator(UserMetadataDto, "header", 'header'),
     zodValidator(AddUserStatusDto, "json", 'data'),
     async (c: Context) => {
@@ -80,14 +80,14 @@ TestController.post(
 );
 TestController.post(
     'report',
-    // openAPI({
-    //     operationId: "report",
-    //     tag: "test",
-    //     request: ReportDto,
-    //     response: CreateProductResponse,
-    //     header: UserMetadataDto,
-    //     dataSource: 'json'
-    // }),
+    openAPI({
+        operationId: "report",
+        tag: "test",
+        request: ReportDto,
+        response: CreateProductResponse,
+        header: UserMetadataDto,
+        dataSource: 'json'
+    }),
     zodValidator(UserMetadataDto, "header", 'data'),
     zodValidator(ReportDto, "json", 'data'),
     async (c: Context) => {
@@ -97,14 +97,14 @@ TestController.post(
 );
 TestController.post(
     'getData',
-    // openAPI({
-    //     operationId: "getData",
-    //     tag: "test",
-    //     request: PaginationDto,
-    //     response: CreateProductResponse,
-    //     header: UserMetadataDto,
-    //     dataSource: 'json'
-    // }),
+    openAPI({
+        operationId: "getData",
+        tag: "test",
+        request: PaginationDto,
+        response: CreateProductResponse,
+        header: UserMetadataDto,
+        dataSource: 'json'
+    }),
     zodValidator(UserMetadataDto, "header", 'data'),
     zodValidator(PaginationDto, "json", 'data'),
     async (c: Context) => {

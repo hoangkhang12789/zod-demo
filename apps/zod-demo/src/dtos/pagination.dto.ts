@@ -1,26 +1,14 @@
 import { z } from '@packages/zod-decorator';
 
-export const BasePaginationDto = z.object({
+export const PaginationDto = z.object({
   limit: z.coerce.number().nullable().optional(),
   nextPageToken: z.string().optional(),
   prevPageToken: z.string().optional(),
+}).openapi({
+  ref: 'PaginationDto',
 });
 
-export const paginationRefinement: Parameters<
-  (typeof BasePaginationDto)['refine']
-> = [
-  (data: z.infer<typeof BasePaginationDto>): boolean => {
-    return !(data.nextPageToken && data.prevPageToken);
-  },
-  {
-    message: 'Only one of nextPageToken or prevPageToken may be provided',
-  },
-];
-
-export const PaginationDto = BasePaginationDto.refine(
-  ...paginationRefinement,
-).openapi({
-  ref: 'PaginationDto',
+export const PaginationOpenAPI = {
   oneOf: [
     {
       required: ['nextPageToken'],
@@ -28,5 +16,13 @@ export const PaginationDto = BasePaginationDto.refine(
     {
       required: ['prevPageToken'],
     },
-  ],
-});
+  ]
+}
+export const PaginationValidate = (data) => {
+  if (data.nextPageToken && data.prevPageToken) {
+    return {
+      message: 'Only one of nextPageToken or prevPageToken may be provided'
+    };
+  }
+  return true;
+};

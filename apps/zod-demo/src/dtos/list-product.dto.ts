@@ -1,14 +1,14 @@
 import { z } from '@packages/zod-decorator';
-import { BasePaginationDto, paginationRefinement } from './pagination.dto';
+import { PaginationDto, PaginationOpenAPI, PaginationValidate } from './pagination.dto';
 
-export const ListProductDto = BasePaginationDto.merge(
-  z.object({
-    test: z.coerce.number().positive(),
-    category: z.string().optional(),
-    sortBy: z.enum(['price', 'name', 'createdAt']).optional()
-  })
+export const ListProductDto = PaginationDto.extend({
+  test: z.coerce.number().positive(),
+  category: z.string().optional(),
+  sortBy: z.enum(['price', 'name', 'createdAt']).optional()
+}
 )
-  .refine(...paginationRefinement)
+  .refine(PaginationValidate)
   .openapi({
-    ref: 'ListProductResponse'
+    ref: 'ListProductResponse',
+    ...PaginationOpenAPI
   });
