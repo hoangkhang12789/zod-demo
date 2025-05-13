@@ -11,5 +11,6 @@ export function swaggerConfig(app: Hono, prefix: string) {
             version: "1.0.0",
         },
         schemas: { ...Dtos, ...Response },
+        enumSchemas: { ...Enums }
     });
 }
