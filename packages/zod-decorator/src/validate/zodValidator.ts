@@ -21,6 +21,7 @@ export const zodValidator = <T extends ZodSchema<any>>(
 
       arrayField.forEach(field => {
         const queries = c.req.queries(field) || c.req.queries(`${field}[]`)
+        delete data[`${field}[]`];
         data[field] = queries
       })
     }
